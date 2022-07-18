@@ -44,6 +44,8 @@
 
 .btn:disabled {
     pointer-events: none;
+    color: grey;
+    border-color: grey;
 }
 
 .btn_play {

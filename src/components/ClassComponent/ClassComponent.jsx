@@ -2,35 +2,50 @@ import React from 'react';
 import style from './ClassComponent.module.css';
 import PropTypes from 'prop-types';
 
-const initialState = {
-  result: 'Твой ход :)',
-  userNumber: '',
-  isEnd: false,
-};
-
 export class ClassComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      ...initialState,
+      result: 'Твой ход :)',
+      userNumber: '',
+      isEnd: false,
       randomNumber:
         Math.floor(Math.random() * (this.props.max - this.props.min + 1)) +
         this.props.min,
       count: this.props.attempts,
     };
+
+    this.initialState = this.state;
   }
+
+  handleClick = () => {
+    this.setState(this.initialState);
+  };
 
   handleSubmit = e => {
     e.preventDefault();
 
-    this.setState(state => ({
-      count: this.state.count - 1,
-    }));
+    this.setState(state => {
+      if (state.userNumber &&
+        state.userNumber >= this.props.min &&
+        state.userNumber <= this.props.max) {
+        return {
+          count: this.state.count - 1,
+        };
+      }
+    });
 
     this.setState(state => {
       if (!state.userNumber) {
         return {
           result: `Введите число!`,
+        };
+      }
+
+      if (state.userNumber < this.props.min ||
+        state.userNumber > this.props.max) {
+        return {
+          result: `Введите число от ${this.props.min} до ${this.props.max}`,
         };
       }
 
@@ -41,7 +56,7 @@ export class ClassComponent extends React.Component {
         };
       }
 
-      if (state.count === 0) {
+      if (state.count <= 0) {
         return {
           result: `Вы проиграли :(`,
           isEnd: true,
@@ -72,16 +87,6 @@ export class ClassComponent extends React.Component {
     });
   };
 
-  handleClick = () => {
-    this.setState({
-      ...initialState,
-      randomNumber:
-        Math.floor(Math.random() * (this.props.max - this.props.min + 1)) +
-        this.props.min,
-      count: this.props.attempts,
-    });
-  };
-
   render() {
     const message = this.state.isEnd ?
 
@@ -105,9 +110,14 @@ export class ClassComponent extends React.Component {
           <label htmlFor='user_number'>
             <input
               className={style.input}
-              type='number' id='user_number'
+              type='number'
+              min={this.props.min}
+              max={this.props.max}
+              id='user_number'
               onChange={this.handleChange}
-              value={this.state.userNumber} />
+              value={this.state.userNumber}
+              disabled={this.state.isEnd}
+            />
           </label>
 
           <button
