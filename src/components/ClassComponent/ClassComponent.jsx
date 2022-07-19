@@ -2,6 +2,9 @@ import React from 'react';
 import style from './ClassComponent.module.css';
 import PropTypes from 'prop-types';
 
+const getRandomNumber = (min, max) =>
+  Math.floor(Math.random() * (max - min + 1)) + min;
+
 export class ClassComponent extends React.Component {
   constructor(props) {
     super(props);
@@ -9,13 +12,19 @@ export class ClassComponent extends React.Component {
       result: 'Твой ход :)',
       userNumber: '',
       isEnd: false,
-      randomNumber:
-        Math.floor(Math.random() * (this.props.max - this.props.min + 1)) +
-        this.props.min,
+      randomNumber: '',
       count: this.props.attempts,
     };
 
     this.initialState = this.state;
+  }
+
+  static getDerivedStateFromProps(props, state) {
+    if (state.randomNumber) return null;
+
+    return {
+      randomNumber: getRandomNumber(props.min, props.max),
+    };
   }
 
   handleClick = () => {

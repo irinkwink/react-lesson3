@@ -5,7 +5,7 @@ export class LifeCycle extends React.Component {
   /**
    * !render
    * constructor
-   * ggetDerivedStateFromProps
+   * getDerivedStateFromProps
    * render
    * !commit
    * обновляется DOM
